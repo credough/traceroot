@@ -3,3 +3,10 @@ echo Cargo.lock >> .gitignore
 echo .env >> .gitignore
 echo *.log >> .gitignore
 echo .DS_Store >> .gitignore
+
+# Rust's output directory
+target
+
+# Local settings
+.soroban
+.stellar
