@@ -1,0 +1,5 @@
+echo /target/ > .gitignore
+echo Cargo.lock >> .gitignore
+echo .env >> .gitignore
+echo *.log >> .gitignore
+echo .DS_Store >> .gitignore
