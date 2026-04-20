@@ -34,17 +34,17 @@ const BuyerDashboard: React.FC = () => {
       const foundBatch = batches[batchHash];
       
       if (!foundBatch) {
-        setMessage('❌ Batch not found');
+        setMessage('Batch not found');
         setLoading(false);
         return;
       }
       
       setBatchDetails(foundBatch);
       setVerified(true);
-      setMessage('✅ Batch verified successfully!');
+      setMessage('Batch verified successfully!');
     } catch (error) {
       console.error('Verification error:', error);
-      setMessage('❌ Verification failed');
+      setMessage('Verification failed');
     } finally {
       setLoading(false);
     }
@@ -66,10 +66,10 @@ const BuyerDashboard: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       const txHash = Math.random().toString(36).substring(2, 15);
       setPaymentHash(txHash);
-      setMessage(`✅ Payment successful! TX: ${txHash}`);
+      setMessage(`Payment successful! TX: ${txHash}`);
     } catch (error) {
       console.error('Payment error:', error);
-      setMessage('❌ Payment failed');
+      setMessage('Payment failed');
     } finally {
       setLoading(false);
     }
@@ -136,7 +136,7 @@ const BuyerDashboard: React.FC = () => {
               </div>
               <div className="detail-item">
                 <span className="label">Status:</span>
-                <span className="value status-verified">✅ Verified</span>
+                <span className="value status-verified">Verified</span>
               </div>
             </div>
 
@@ -162,6 +162,15 @@ const BuyerDashboard: React.FC = () => {
                 {loading ? 'Processing...' : 'Link Payment'}
               </button>
             </form>
+
+            {paymentHash && (
+              <div className="info-box">
+                <h3>Payment Recorded</h3>
+                <p>
+                  Transaction hash: <code>{paymentHash}</code>
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

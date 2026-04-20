@@ -17,7 +17,7 @@ const QRScannerPage: React.FC = () => {
       videoRef.current,
       (result) => {
         console.log('QR Code detected:', result.data);
-        setMessage(`✅ QR Code detected! Redirecting...`);
+        setMessage(`QR Code detected! Redirecting...`);
         // Redirect to batch lookup with the scanned hash
         setTimeout(() => {
           navigate(`/?batch=${encodeURIComponent(result.data)}`);
@@ -51,7 +51,7 @@ const QRScannerPage: React.FC = () => {
         setMessage('📷 Camera started. Point at a QR code.');
       } catch (error) {
         console.error('Failed to start scanner:', error);
-        setMessage('❌ Failed to access camera. Please check permissions.');
+        setMessage('Failed to access camera. Please check permissions.');
       }
     }
   };

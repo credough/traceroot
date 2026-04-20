@@ -30,7 +30,7 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="header-content">
         <Link to="/" className="logo">
-          🌱 TraceRoot
+          TraceRoot
         </Link>
         <nav className="nav">
           <Link

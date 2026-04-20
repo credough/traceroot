@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import QRCode from 'qrcode';
 import './BatchLookup.css';
@@ -21,15 +21,7 @@ const BatchLookup: React.FC = () => {
   const [qrCode, setQrCode] = useState('');
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const hashFromUrl = searchParams.get('batch');
-    if (hashFromUrl) {
-      setBatchHash(hashFromUrl);
-      handleLookup(hashFromUrl);
-    }
-  }, [searchParams]);
-
-  const handleLookup = async (hash?: string) => {
+  const handleLookup = useCallback(async (hash?: string) => {
     const searchHash = hash || batchHash;
     if (!searchHash) {
       setMessage('Please enter a batch hash');
@@ -49,13 +41,13 @@ const BatchLookup: React.FC = () => {
       if (!foundBatch) {
         setBatchData(null);
         setQrCode('');
-        setMessage('❌ Batch not found');
+        setMessage('Batch not found');
         setLoading(false);
         return;
       }
 
       setBatchData(foundBatch);
-      setMessage('✅ Batch found!');
+      setMessage('Batch found!');
 
       // Generate QR code
       const qrUrl = await QRCode.toDataURL(
@@ -66,20 +58,41 @@ const BatchLookup: React.FC = () => {
       console.error('Lookup error:', error);
       setBatchData(null);
       setQrCode('');
-      setMessage('❌ Batch lookup failed');
+      setMessage('Batch lookup failed');
     } finally {
       setLoading(false);
     }
-  };
+  }, [batchHash]);
+
+  useEffect(() => {
+    const hashFromUrl = searchParams.get('batch');
+    if (hashFromUrl) {
+      setBatchHash(hashFromUrl);
+      handleLookup(hashFromUrl);
+    }
+  }, [searchParams, handleLookup]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleLookup();
   };
 
+  const downloadQRCode = () => {
+    if (!qrCode) return;
+    const link = document.createElement('a');
+    link.href = qrCode;
+    link.download = `batch-${batchHash}-qr.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="batch-lookup">
-      <h1>Batch Lookup</h1>
+      <div className="batch-lookup-intro">
+        <h1>Batch Lookup</h1>
+        <p className="batch-lookup-subtitle">Search and verify cacao batch provenance records on the blockchain</p>
+      </div>
       
       <div className="lookup-card">
         <form onSubmit={handleSubmit} className="form">
@@ -143,7 +156,7 @@ const BatchLookup: React.FC = () => {
               <div className="provenance-item">
                 <span className="label">Verification Status:</span>
                 <span className={`value ${batchData.verified ? 'verified' : 'unverified'}`}>
-                  {batchData.verified ? '✅ Verified' : '⏳ Pending'}
+                  {batchData.verified ? 'Verified' : 'Pending'}
                 </span>
               </div>
             </div>
@@ -151,8 +164,13 @@ const BatchLookup: React.FC = () => {
             {qrCode && (
               <div className="qr-section">
                 <h3>Share This Batch</h3>
-                <img src={qrCode} alt="Batch QR Code" className="qr-code" />
+                <div className="qr-code-container">
+                  <img src={qrCode} alt="Batch QR Code" className="qr-code" />
+                </div>
                 <p className="qr-help">Scan this QR code to view this batch record</p>
+                <button className="qr-download-btn" onClick={downloadQRCode}>
+                  Download QR Code
+                </button>
               </div>
             )}
           </div>

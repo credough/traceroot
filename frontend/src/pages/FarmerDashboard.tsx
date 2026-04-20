@@ -75,7 +75,7 @@ const FarmerDashboard: React.FC = () => {
       localStorage.setItem('traceroot_batches', JSON.stringify(batches));
       
       console.log('Batch registered with hash:', batchHash);
-      setMessage(`✅ Batch registered successfully! Hash: ${batchHash}`);
+      setMessage(`Batch registered successfully! Hash: ${batchHash}`);
       
       // Reset form
       setFormData({
@@ -89,7 +89,7 @@ const FarmerDashboard: React.FC = () => {
       });
     } catch (error) {
       console.error('Registration error:', error);
-      setMessage('❌ Registration failed. Please try again.');
+      setMessage('Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
